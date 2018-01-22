@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+$( document ).ready( function() {
+  var x = 50;
+	setInterval( function() {
+
+
+		var meinCanvas = $( 'canvas' ).get(0);
+
+		// inhalt des canvas befindet sich im context
+		var ctx = meinCanvas.getContext('2d');
+		ctx.clearRect(0,0,400,400);
+		ctx.fillStyle = '#fff';
+		ctx.fillRect(x,50,100,100);  // (X,Y Koordinate, Breite, Höhe)
+    x++; // Rechteck fliegt
+
+
+	  // linie zeichnen
+	  ctx.strokeStyle = '#f00';
+		ctx.lineWidth = 10;
+		ctx.moveTo(0, 200);
+		ctx.lineTo(400, 200);
+		ctx.stroke();  // linie zeichnen
+
+		ctx.moveTo(100, 100);
+		ctx.lineTo(200, 150);
+		ctx.lineTo(200, 100);
+		ctx.closePath();  //ctx.lineTo(100, 100);
+		ctx.stroke();
+
+		// dreieck gelb ausfüllen
+		ctx.fillStyle = 'yellow';
+		ctx.fill();
+
+		// Kreis zeichnen
+		ctx.beginPath();
+		ctx.arc(200,300,50,0,2*Math.PI);  // radius, startwinkel, endwinkel
+		ctx.stroke();
+
+		// Text schreiben
+		ctx.font = '50px Arial';
+		ctx.lineWidth = 1;
+		ctx.strokeText(' WIFI ', 0, 400);
+		ctx.fillText(' WIFI ', 0, 300);
+
+		// Kreis mit Farbverlauf
+		var verlauf = ctx.createLinearGradient(0,250,0,350);  // Koordinaten des Farbverlauf
+		verlauf.addColorStop(0,'#fff'); // Farben definieren, Prozent
+		verlauf.addColorStop(1,'#000');
+		ctx.fillStyle = verlauf;
+
+		// Kreis zeichnen
+		ctx.beginPath();
+		ctx.arc(300,300,50,0,2*Math.PI);  // radius, startwinkel, endwinkel
+		ctx.stroke();
+		ctx.fill();
+
+		// grafik einfügen
+		//var img = $( '<img>' ).attr('src', ...).get(0); // bild object erzeugen, nicht optimal
+		var img = new Image();
+		img.src = 'http://logo-load.com/uploads/posts/2016-09/javascript-logo.png'
+		img.onload = function() {
+			ctx.drawImage(img,0,100);  // bild und Koordinate, Bild muss bereitsgeladen sein
+		};
+
+}, 100);  //timer
+})
+	</script>
+	<style>
+	body {background-color: lightblue }
+	canvas, img { border:1px solid red; }
+	</style>
+</head>
+<body>
+	<canvas width="400" height="400" ></canvas>
+</body>
+</html>
