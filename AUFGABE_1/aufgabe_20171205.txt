@@ -4,7 +4,7 @@ Eingabe Größe in cm
 Eingabe Gewicht in kg (Kommazahlen erlauben)
 BMI = kg / m²
 Ausgabe des Wertes als Text (gerundet auf 3 Kommastellen)
-Ausgabe in Grafik als X (bmi_tabelle.gif)
+Ausgabe in Grafik als X (bmi_tabelle.gif) (Text über Grafik im HTML)
 
 Zusatzaufgabe:
 Alters und Geschlechtsabhängigkeit

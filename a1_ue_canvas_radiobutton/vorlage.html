@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	$( document ).ready( function() {
+		var meinCanvas = $( 'canvas' ).get(0);
+
+		// inhalt des canvas befindet sich im context
+		var ctx = meinCanvas.getContext('2d');
+		ctx.clearRect(0,0,200,200);
+		ctx.lineWidth = 1;
+		ctx.strokeStyle="blue";
+		ctx.rect(0,0,100,100);  // (X,Y Koordinate, Breite, Höhe)
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.arc(30,60,10,3*Math.PI/2,2*Math.PI);  // radius, startwinkel, endwinkel
+		ctx.stroke();
+
+		ctx.beginPath();
+		ctx.arc(70,60,30,Math.PI,3*Math.PI/2);  // radius, startwinkel, endwinkel
+		ctx.stroke();
+	});
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+<canvas id='radioButton' width="200" height="200"></canvas>
+
+</body>
+</html>

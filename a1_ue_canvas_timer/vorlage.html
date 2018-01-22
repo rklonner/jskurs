@@ -7,7 +7,7 @@
 	<script>
 		$( document ).ready( function() {
 
-			var _COUNT = 75;
+			var _COUNT = 10;
 			var counter = _COUNT;
 
 			var interval = setInterval( function() {
@@ -31,7 +31,8 @@
 				// prozent des timers berechnen
 				percent = counter/_COUNT
 				console.log(percent)
-				ctx.arc(100,100,95,0,2*Math.PI * (1-percent));  // radius, startwinkel, endwinkel
+				console.log(((3*Math.PI)/2) * (1-percent))
+				ctx.arc(100,100,95,-Math.PI/2,(2*Math.PI) * (1-percent) - Math.PI/2);  // radius, startwinkel, endwinkel
 				ctx.stroke();
 
 				counter--;

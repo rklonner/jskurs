@@ -6,6 +6,8 @@ Texte (Bildunterschrift, ausgelesehen aus dem alt-Attribute)
 
 Mittels Optionen sollen Bilder unten oder oben eingeblendet werden können.
 
+Tabelle mit Bildern?
+
 Beispiel:
 <img src="meinbild.jpg" alt="Das ist der Bildtext">
 $( 'img' ).bildtext();

@@ -18,3 +18,11 @@ Zusatzaufgaben:
 Geschwindigkeit ändert sich während der Dauer des Rennens.
 User kann durch Klicken auf Fahrrad Geschwindikeit verändern.
 Rangliste, wer als 1., 2. und 3. (usw.) Ziel erreicht.
+
+
+mir <hr> HTML Tags, Linien
+
+var cycle = new Object(
+  velocity = 10;
+  hupen: function () {altert('tuut')}
+);

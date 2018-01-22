@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	var squash = {
+		ball:{
+			interval:false,
+			x:150,
+			y:5,
+			r:5,
+			vy:5,
+			fly:function () {
+				this.y+=this.vy;
+
+				if ( this.y < this.r || (this.y >= 375 && this.x >= squash.racket.x-squash.racket.w/2 &&
+					this.x <= squash.racket.x+squash.racket.w/2)
+				) {
+					this.vy *= -1;
+				}
+				if ( this.y > 395 ) {
+					clearInterval(squash.interval)
+					alert( 'GAME OVER' );
+				}
+			}
+		},
+		racket:{
+			x:150,
+			w:100,
+			h:10
+		},
+		draw:function( canvas ) {
+			var ctx = canvas.getContext('2d');
+			ctx.clearRect(0,0,300,400);
+
+			// draw ball
+			ctx.beginPath();
+			ctx.arc(this.ball.x, this.ball.y, this.ball.r, 0, 2*Math.PI);
+			ctx.fill();
+
+			//draw racket
+			ctx.fillRect( this.racket.x - this.racket.w/2, 380, this.racket.w, this.racket.h)
+		},
+		game:function() {
+      this.ball.fly();
+			this.draw( $( '#game' ).get(0) );
+		}
+	}
+
+	$(document).ready( function() {
+		squash.interval = setInterval( function() { squash.game(); }, 30 );
+	})
+	</script>
+	<style>
+	#game { border: 2px solid #000; }
+	</style>
+</head>
+<body>
+<canvas width="300" height="400" id="game"></canvas>
+
+</body>
+</html>
