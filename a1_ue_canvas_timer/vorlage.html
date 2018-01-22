@@ -1,0 +1,52 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+		$( document ).ready( function() {
+
+			var _COUNT = 75;
+			var counter = _COUNT;
+
+			var interval = setInterval( function() {
+
+				var meinCanvas = $( 'canvas' ).get(0);
+
+				// inhalt des canvas befindet sich im context
+				var ctx = meinCanvas.getContext('2d');
+				ctx.clearRect(0,0,200,200);
+
+	      // text schreiben
+				ctx.font = '100px Arial';
+				ctx.lineWidth = 1;
+				ctx.textAlign = 'center';
+				ctx.textBaseline= 'middle';
+				ctx.fillText(counter, 100, 100);
+
+	      // status kreis zeichnen		ctx.beginPath();
+				ctx.beginPath();
+				ctx.lineWidth = 10;
+				// prozent des timers berechnen
+				percent = counter/_COUNT
+				console.log(percent)
+				ctx.arc(100,100,95,0,2*Math.PI * (1-percent));  // radius, startwinkel, endwinkel
+				ctx.stroke();
+
+				counter--;
+				console.log(counter)
+
+				if (counter < 0)
+					clearInterval(interval);
+				}, 500);
+		});
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+	<canvas width="200" height="200" ></canvas>
+
+</body>
+</html>
