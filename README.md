@@ -1,1 +1,1 @@
-# jskurs
+# JavaScript Kurs
