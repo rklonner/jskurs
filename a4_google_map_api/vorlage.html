@@ -1,0 +1,99 @@
+<!doctype html>
+<html>
+<head>
+	<title>Google Maps API</title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script async src="https://maps.googleapis.com/maps/api/js?callback=initMap"></script>
+	<script>
+
+		var map;
+
+	$(document).ready(function() {
+		// Fadenkreuz zeichnen
+		var ctx = $('#cross').get(0).getContext('2d');
+		ctx.lineWidth = 2;
+		ctx.moveTo(40, 50);
+		ctx.lineTo(60, 50);
+		ctx.stroke();
+
+		ctx.moveTo(50, 40);
+		ctx.lineTo(50, 60);
+		ctx.stroke();
+
+
+		// aktuellen Marker bei Kreuz setzen und Daten speichern
+		$('#saveBtn').on('click', function() {
+			console.log("Save")
+			var markerText = $('#saveInputText').val();
+			var position = map.getCenter()
+			console.log(position)
+			var lat = position.lat()
+			var lon = position.lng()
+
+			/*
+			TODO: store Markers in localStorage
+			markerStore = [{}]
+			var retrievedMarkers = JSON.parse(localStorage.getItem('myMarkers'))
+			localStorage.setItem( 'myMarkers', JSON.stringify(myMarkers))
+			*/
+
+			// create marker on that position
+			var marker = new google.maps.Marker({
+				map: map,
+				position: {lat: lat, lng: lon},
+				label: 'X',
+				title: markerText
+			});
+		});
+	});
+
+
+
+		var initMap = function() {
+			var marker;
+			var mapOptions = {
+				zoom: 14,
+				center: {lat: 0, lng: 0},
+			};
+			map = new google.maps.Map(document.getElementById('karte'), mapOptions);
+
+			// geolocation, woher kommt Information
+			// - IP
+			// - GPS
+			// - mobileNetwork
+			// - WLAN
+
+			// get current position
+			navigator.geolocation.getCurrentPosition(function(position) {
+				var lat = position.coords.latitude
+				var lon = position.coords.longitude
+				map.setCenter({lat: lat, lng: lon})
+
+				var marker = new google.maps.Marker({
+					map: map,
+					position: {lat: lat, lng: lon},
+					label: 'A'
+				});
+			});
+	};
+
+	</script>
+
+	<style>
+	#wrapper {position: relative}
+	#karte {width: 400px; height:300px; border:1px solid #000;}
+	#cross {pointer-events: none; position: absolute; top:100px; left:150px;}
+	</style>
+</head>
+
+<body>
+	<h1>Google Maps API</h1>
+	<div id="wrapper">
+		<div id="karte"></div>
+		<canvas id="cross" width="100" height="100"></canvas>
+	</div>
+	<br>
+	<input type="text" id="saveInputText"><button id="saveBtn">Save</button>
+</body>
+</html>
