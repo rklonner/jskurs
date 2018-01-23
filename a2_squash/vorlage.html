@@ -5,20 +5,32 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
+	$.randy = function(i,j) {
+		return Math.floor (Math.random() * (j-i+1) ) + i;
+	}
 	var squash = {
 		ball:{
 			interval:false,
 			x:150,
 			y:5,
 			r:5,
+			vx:0,
 			vy:5,
 			fly:function () {
+				this.x+=this.vx;
 				this.y+=this.vy;
 
 				if ( this.y < this.r || (this.y >= 375 && this.x >= squash.racket.x-squash.racket.w/2 &&
 					this.x <= squash.racket.x+squash.racket.w/2)
 				) {
 					this.vy *= -1;
+					this.vx = $.randy(-5, 5);
+					$('#ping').get(0).currentTime = 0;
+					$('#ping').get(0).volume = 1;
+					$('#ping').get(0).play();
+				}
+				if ( this.x < 5 || this.x > 275) {
+					this.vx *= -1;
 				}
 				if ( this.y > 395 ) {
 					clearInterval(squash.interval)
@@ -29,10 +41,21 @@
 		racket:{
 			x:150,
 			w:100,
-			h:10
+			h:10,
+			vx:0,
+			move: function() {
+				// limit setzen: BUGGY
+				if (this.x < 50) {
+					this.x = 50
+				}
+				if (this.x > 250) { this.x = 250 }
+				this.x += this.vx;
+
+			}
 		},
 		draw:function( canvas ) {
 			var ctx = canvas.getContext('2d');
+
 			ctx.clearRect(0,0,300,400);
 
 			// draw ball
@@ -45,12 +68,23 @@
 		},
 		game:function() {
       this.ball.fly();
+			this.racket.move();
 			this.draw( $( '#game' ).get(0) );
 		}
 	}
 
 	$(document).ready( function() {
 		squash.interval = setInterval( function() { squash.game(); }, 30 );
+	});
+
+	$(document).on( 'keydown', function (event) {
+		console.log(event);
+		var taste = event.originalEvent.keyCode;
+		console.log(taste);
+		// 37 -> tlinks
+		// 39 -> rechts
+		if (taste == 37) { squash.racket.vx = -10;}
+		if (taste == 39) { squash.racket.vx = 10;}
 	})
 	</script>
 	<style>
@@ -58,7 +92,9 @@
 	</style>
 </head>
 <body>
-<canvas width="300" height="400" id="game"></canvas>
-
+	<canvas width="300" height="400" id="game"></canvas>
+	<audio id="ping">
+		<source src="sound.mp3">
+	</audio>
 </body>
 </html>
