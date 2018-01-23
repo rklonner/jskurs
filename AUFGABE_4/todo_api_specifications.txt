@@ -1,0 +1,21 @@
+TODO API
+
+/todo
+
+
+# create new task
+/tasks method=POST, type=JSON
+
+# Update task, Mark task as solved
+/tasks/<int: task_id> method=PUT, type=JSON
+
+# Delete task
+/tasks/<int: task_id> method=DELETE
+
+# Get list of tasks
+/tasks method=GET
+return type JSON
+
+# Get particular task
+/task/<int: task_id>, method=GET
+return type JSON
