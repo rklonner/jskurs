@@ -1,0 +1,65 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	
+	var calcBmi = function() {
+	  var height = document.getElementById('height').value;
+	  var weight = document.getElementById('weight').value;
+	  console.log("Berechnen", height, weight)
+	  var bmi = weight/Math.pow((height/100), 2);
+	  console.log(bmi);
+	  if (!Number.isNaN(bmi)) {
+	    document.getElementById('result').innerHTML = bmi.toFixed(3);
+		placeCross(height, weight);
+	  }
+	  else {
+		document.getElementById('result').innerHTML = '0';
+	  }
+	};
+	
+	var placeCross = function(height, weight) {
+	  var bottom_offset = 25;
+	  var left_offset = -16;
+	  var y = parseInt(weight) + bottom_offset;
+	  var x = parseInt(height) + left_offset;
+	  console.log(weight);
+	  console.log(bottom_offset);
+	  console.log(y)
+	  console.log(x)
+	  $('.cross').css({
+	    "bottom": y + "px",
+		"left": x + "px"
+	  });
+	  console.log($('.cross'))
+	};
+	
+	$(document).ready(function() {
+	  $('#calculateBtn').on('click', calcBmi);
+	});
+	
+	
+	</script>
+	<style>
+	.container {position: relative;}
+	.cross {position: absolute; bottom:75px; left:154px;}
+	
+	</style>
+</head>
+<body>
+	<h1>Body-Mass-Index (BMI)</h1>
+	<input id="height" type="number">Größe [cm]</input>
+	<br>
+	<input id="weight" type="number" step="0.1">Gewicht [kg]</input>
+	<br>
+	<button id="calculateBtn">Berechnen</button>
+	<p id="result">0</p>
+	<div class="container">
+	  <img src="bmi_tabelle.gif">
+	  <span class="cross">X</span>
+	</div>
+</body>
+</html>
