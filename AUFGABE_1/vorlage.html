@@ -22,12 +22,12 @@
 	};
 	
 	var placeCross = function(height, weight) {
-	  var bottom_offset = 25;
-	  var left_offset = -16;
-	  var y = parseInt(weight) + bottom_offset;
-	  var x = parseInt(height) + left_offset;
+	  var y_offset = -75;
+	  var x_offset = -1546;
+	  var y = parseInt(weight)*3 + y_offset;
+	  var x = parseInt(height)*10 + x_offset;
 	  console.log(weight);
-	  console.log(bottom_offset);
+	  console.log(y_offset);
 	  console.log(y)
 	  console.log(x)
 	  $('.cross').css({
@@ -38,24 +38,27 @@
 	};
 	
 	$(document).ready(function() {
-	  $('#calculateBtn').on('click', calcBmi);
+	  calcBmi();
+	  //$('#calculateBtn').on('click', calcBmi);
+	  $('#height').on('change', calcBmi);
+	  $('#weight').on('change', calcBmi);
 	});
-	
-	
 	</script>
+	
 	<style>
 	.container {position: relative;}
 	.cross {position: absolute; bottom:75px; left:154px;}
-	
 	</style>
+	
 </head>
+
 <body>
 	<h1>Body-Mass-Index (BMI)</h1>
-	<input id="height" type="number">Größe [cm]</input>
+	<input id="height" type="number" value="188">Größe [cm]</input>
 	<br>
-	<input id="weight" type="number" step="0.1">Gewicht [kg]</input>
+	<input id="weight" type="number" step="0.1" value="78">Gewicht [kg]</input>
 	<br>
-	<button id="calculateBtn">Berechnen</button>
+	<!--<button id="calculateBtn">Berechnen</button>-->
 	<p id="result">0</p>
 	<div class="container">
 	  <img src="bmi_tabelle.gif">
