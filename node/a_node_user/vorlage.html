@@ -22,6 +22,24 @@
 			});
 		}
 	});
+	$(document).ready(function() {
+		$('#show').on('click', function() {
+			$.ajax({
+				dataType: "json",
+				url: 'http://localhost:5000/userverwaltung',
+				method: 'GET',
+				success: function(userdaten) {
+					$('#alle').empty();  // div leeren
+					$.each(userdaten['user'], function(key, value) {
+						console.log(value);
+						userHTML = $('<p>').text(value);
+						$('#alle').append(userHTML);
+					})
+				}
+			});
+		});
+	});
+
 	</script>
 	<style>
 	* {font: 1.3rem Arial;}

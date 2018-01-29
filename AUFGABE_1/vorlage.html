@@ -5,7 +5,7 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
-	
+
 	var calcBmi = function() {
 	  var height = document.getElementById('height').value;
 	  var weight = document.getElementById('weight').value;
@@ -13,14 +13,14 @@
 	  var bmi = weight/Math.pow((height/100), 2);
 	  console.log(bmi);
 	  if (!Number.isNaN(bmi)) {
-	    document.getElementById('result').innerHTML = bmi.toFixed(3);
+	    document.getElementById('result').innerHTML = "BMI = " + bmi.toFixed(3);
 		placeCross(height, weight);
 	  }
 	  else {
 		document.getElementById('result').innerHTML = '0';
 	  }
 	};
-	
+
 	var placeCross = function(height, weight) {
 	  var y_offset = -75;
 	  var x_offset = -1546;
@@ -36,7 +36,7 @@
 	  });
 	  console.log($('.cross'))
 	};
-	
+
 	$(document).ready(function() {
 	  calcBmi();
 	  //$('#calculateBtn').on('click', calcBmi);
@@ -44,22 +44,31 @@
 	  $('#weight').on('change', calcBmi);
 	});
 	</script>
-	
+
 	<style>
 	.container {position: relative;}
 	.cross {position: absolute; bottom:75px; left:154px;}
+	.formInput {width: 70px;}
+	.bmiResult {background-color:powderblue; text-align: center; font-weight: bold;}
 	</style>
-	
+
 </head>
 
 <body>
 	<h1>Body-Mass-Index (BMI)</h1>
-	<input id="height" type="number" value="188">Größe [cm]</input>
-	<br>
-	<input id="weight" type="number" step="0.1" value="78">Gewicht [kg]</input>
-	<br>
-	<!--<button id="calculateBtn">Berechnen</button>-->
-	<p id="result">0</p>
+	<div style="width: 170px;">
+		<input id="height" class="formInput" type="number" value="188" min="160" max="200">Größe [cm]</input>
+		<br>
+		<input id="weight" class="formInput" type="number" step="0.1" value="78" min="40" max="120">Gewicht [kg]</input>
+		<br>
+		<input id="age" class="formInput" type="number" value="29" min="20" max="80">Alter [Jahre]</input>
+		<br>
+		<input id="gender_male" type="radio" name="gender" checked="checked">Männlich</input>
+		<input id="gender_female" type="radio" name="gender">Weiblich</input>
+		<!--<button id="calculateBtn">Berechnen</button>-->
+		<p id="result" class="bmiResult">0</p>
+	</div>
+
 	<div class="container">
 	  <img src="bmi_tabelle.gif">
 	  <span class="cross">X</span>
