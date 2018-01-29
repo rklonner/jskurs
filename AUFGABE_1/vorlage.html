@@ -5,6 +5,26 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
+	
+	// source: http://www.gewichtstabellen.com/bmi-tabelle-frau-mann-alter/
+	var dataAgeDependency = {
+	  'male': [
+		{x: 19, x: 24,  textString: "53.5 - 72.2 kg"},
+		{x: 25, x: 34,  textString: "56.4 - 75.1 kg"},
+		{x: 35, x: 44,  textString: "59.2 - 78.0 kg"},
+		{x: 45, x: 54,  textString: "62.1 - 80.9 kg"},
+		{x: 55, x: 64,  textString: "64.0 - 83.8 kg"},
+		{x: 64, x: 100, textString: "66.9 - 86.7 kg"}
+	  ],
+	  'female': [
+		{x: 19, x: 24,  textString: "50.6 - 69.4 kg"},
+		{x: 25, x: 34,  textString: "53.5 - 72.2 kg"},
+		{x: 35, x: 44,  textString: "56.4 - 75.1 kg"},
+		{x: 45, x: 54,  textString: "59.2 - 78.0 kg"},
+		{x: 55, x: 64,  textString: "62.1 - 80.9 kg"},
+		{x: 64, x: 100, textString: "64.0 - 83.8 kg"}
+	  ],
+	}
 
 	var calcBmi = function() {
 	  var height = document.getElementById('height').value;
@@ -18,7 +38,15 @@
 	  }
 	  else {
 		document.getElementById('result').innerHTML = '0';
-	  }
+	  }  
+	};
+	
+	var getAgeGenderDependency = function() {
+	  var age = document.getElementById('age').value;
+      var gender = document.querySelector('input[name="gender"]:checked').value;
+	  console.log(age, gender);
+	  //var ageGenderSentence = "Das Normalgewicht " + genderString + "mit 1.70 cm in diesem Alter liegt zwischen " + genderRange + "."
+	  //document.getElementById('ageGender').innerHTML = 
 	};
 
 	var placeCross = function(height, weight) {
@@ -42,6 +70,8 @@
 	  //$('#calculateBtn').on('click', calcBmi);
 	  $('#height').on('change', calcBmi);
 	  $('#weight').on('change', calcBmi);
+	  $('#age').on('change', getAgeGenderDependency);
+	  $('#gender').on('change', getAgeGenderDependency);
 	});
 	</script>
 
@@ -61,12 +91,12 @@
 		<br>
 		<input id="weight" class="formInput" type="number" step="0.1" value="78" min="40" max="120">Gewicht [kg]</input>
 		<br>
-		<input id="age" class="formInput" type="number" value="29" min="20" max="80">Alter [Jahre]</input>
+		<input id="age" class="formInput" type="number" value="29" min="19" max="100">Alter [Jahre]</input>
 		<br>
-		<input id="gender_male" type="radio" name="gender" checked="checked">Männlich</input>
-		<input id="gender_female" type="radio" name="gender">Weiblich</input>
-		<!--<button id="calculateBtn">Berechnen</button>-->
-		<p id="result" class="bmiResult">0</p>
+		<input id="gender_male" type="radio" name="gender" value="male" checked="checked">Männlich</input>
+		<input id="gender_female" type="radio" name="gender" value="female">Weiblich</input>
+		<p id="result" class="bmiResult"></p>
+		<p id="ageGender"></p>
 	</div>
 
 	<div class="container">
