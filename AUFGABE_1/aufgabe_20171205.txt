@@ -8,7 +8,8 @@ Ausgabe in Grafik als X (bmi_tabelle.gif) (Text über Grafik im HTML)
 
 Zusatzaufgabe:
 Alters und Geschlechtsabhängigkeit
-(siehe https://de.wikipedia.org/wiki/Body-Mass-Index)
+Pro Alter und Geschlecht gibt es Normalbereicht, schauen ob dort drinnen,
+wenn ja 'Normalbereich', wenn nein 'nicht im NOrmalbereich'
 
 Aufgabe 2) freiwillige Übung
 Zahl raten mit unterschiedlichen Schwierigkeiten

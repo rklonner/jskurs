@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	$(document).on('click', '#save', function (event) {
+		event.preventDefault();
+		var username = $('#name').val();
+		if(username == '' ) {
+			alert('leer');
+		}
+		else {
+			$.ajax({
+				url: 'http://localhost:5000/userverwaltung',
+				method: 'POST',
+				data: {uname: username},
+				success: function(responseVomServer) {
+					console.log(responseVomServer);
+				}
+			});
+		}
+	});
+	</script>
+	<style>
+	* {font: 1.3rem Arial;}
+	</style>
+</head>
+<body>
+	Name <input type="text" id="name">
+	<button id="save">Speichern</button>
+	<hr>
+	<button id="show">Zeige alle</button>
+	<div id="alle"></div>
+</body>
+</html>
