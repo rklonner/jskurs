@@ -8,11 +8,11 @@
     function randomIntFromInterval(min,max) {
       return Math.floor(Math.random()*(max-min+1)+min);
     }
-	
+
 	var play = function() {
 	  // read level and get array
 	  var level = document.querySelector('input[name="level"]:checked').value;
-	  
+
 	  var cG = null; //Computer guess
 	  switch(level) {
 	    case '1-10':
@@ -25,24 +25,21 @@
 		  cG = randomIntFromInterval(1,50);
 		  break;
 	  }
-	  
-	  
+
+
 	  // read user input
 	  var uG = $('#userGuess').val();
 	  console.log("User guess",uG,"computer guess",cG);
-	  
+
 	  // verify solution
 	  if (uG != cG) {
-	    // not found
-		alert("Nicht erraten");
-		color = "red";
+		  color = "red";
 	  }
 	  else {
-	    alert("Erraten!");
-		color = "green";
+		  color = "green";
 	  }
 	  $('#solution').text("Dein Tipp: " + uG + " Lösung: " + cG).css("background-color",color);
-	  
+
 	  console.log(level, uG);
 	};
 	$(document).ready(function() {

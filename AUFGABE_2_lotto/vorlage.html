@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	var createLottoTicket = function() {
+		console.log("Create Ticket");
+		var ticketTable = $('<table></table>').attr({id: "ticket1"});
+		var nrows = 8;
+		var ncols = 6;
+		var number = 0;
+		for (var i=0; i < nrows; i++) {
+			var row = $('<tr></tr>').appendTo(ticketTable);
+			for (var j=0; j < ncols; j++) {
+				number++;
+				if (number <= 45) {
+					numberText = number
+				}
+				else {
+					numberText = ''
+				}
+				$('<td></td>').text(numberText).appendTo(row);
+			}
+		}
+
+		console.log(ticketTable.html());
+		ticketTable.appendTo($('#lottoTickets'));
+	}
+
+	$(document).ready(function() {
+		createLottoTicket();
+	});
+	</script>
+	<style>
+	td { border:1px solid #ddd; padding:4px; min-width:10px;  }
+	/*td {background: linear-gradient(to right bottom, #2f3441 50%, #212531 50%)};*/
+	td {background: linear-gradient(to bottom left, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};
+	/*td {background: linear-gradient(to top right, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};*/
+	/*td:after {
+	content:"";
+  position:absolute;
+	border-bottom:1px solid red;
+  width:10px;
+  transform: rotate(45deg);
+  transform-origin: 0% 0%;
+  }*/
+	</style>
+</head>
+<body>
+	<h1>Lotto 6 aus 45</h1>
+  <div id="lottoTickets"></div>
+</body>
+</html>

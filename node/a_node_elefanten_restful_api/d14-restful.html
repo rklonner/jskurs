@@ -39,35 +39,38 @@
 		})
 	};
 
+	var createTable = function(alleElefanten) {
+		if (alleElefanten.length > 0) {
+			$('tr + tr').hide(); // zweite zeile ausblenden
+			for (var i in alleElefanten) {
+				// gelöschte elemente überspringen
+				if (!alleElefanten[i]) continue;
+				$('<tr>').data('id', i).appendTo('table')
+				 .append(
+					 $('<td contenteditable>').html(alleElefanten[i].name)
+				 )
+				 .append(
+					 $('<td contenteditable>').html(alleElefanten[i].gewicht)
+				 )
+				 .append(
+					 $('<td>').append(
+						 $('<a href="#">löschen</a>').on('click', deleteElefantListener)
+					 ).append('|').append(
+						 $('<a href="#">editieren</a>').on('click', editElefantListener)
+					 )
+				 )
+			}  // for
+		}  //if
+	}
+
   var getData = function () {
 		$.ajax({
 			url: 'http://localhost:26893/restful/elefanten',
 			method: 'GET',
 			success: function (daten) {
-
 				var alleElefanten = daten.elefanten;
 				console.log(alleElefanten);
-				if (alleElefanten.length > 0) {
-					$('tr + tr').hide(); // zweite zeile ausblenden
-					for (var i in alleElefanten) {
-						// gelöschte elemente überspringen
-						if (!alleElefanten[i]) continue;
-						$('<tr>').data('id', i).appendTo('table')
-						 .append(
-							 $('<td contenteditable>').html(alleElefanten[i].name)
-						 )
-						 .append(
-							 $('<td contenteditable>').html(alleElefanten[i].gewicht)
-						 )
-						 .append(
-							 $('<td>').append(
-								 $('<a href="#">löschen</a>').on('click', deleteElefantListener)
-							 ).append('|').append(
-							   $('<a href="#">editieren</a>').on('click', editElefantListener)
-							 )
-						 )
-					}  // for
-				}  //if
+				createTable(alleElefanten);
 			}  // success
 		});  // ajax
 	}; // getData
@@ -109,6 +112,39 @@
 		})
 	});
 
+  // Tabellenspalten sortieren
+	$(document).on('click','th',function() {
+		var columnName = $(this).html();
+		columnName = columnName.charAt(0).toLowerCase() + columnName.slice(1);
+		console.log("Sort", columnName)
+		$.ajax({
+			url: 'http://localhost:26893/restful/elefanten',
+			method: 'GET',
+			success: function (daten) {
+				var alleElefanten = daten.elefanten;
+				console.log(alleElefanten);
+				tmpAlleElefanten = {};
+				for (var i in alleElefanten) {
+					if (!alleElefanten[i]) continue;
+					var value = alleElefanten[i][columnName];
+					console.log(value);
+					tmpAlleElefanten[value] = alleElefanten[i];
+				}
+				console.log(tmpAlleElefanten)
+				var keys = Object.keys(tmpAlleElefanten)
+				var sortedKeys = keys.sort();
+				console.log(keys, sortedKeys)
+				var sortedAlleElefanten = [];
+				for (var i in sortedKeys){
+					var key = sortedKeys[i];
+					sortedAlleElefanten.push(tmpAlleElefanten[sortedKeys[i]]);
+				}
+				console.log(sortedAlleElefanten)
+				createTable(sortedAlleElefanten);
+			}  // success
+		});  // ajax
+	});
+
 	</script>
 	<style>
 	* { font:20px Arial; }
@@ -133,7 +169,7 @@
 	<hr>
 	<div id="ausgabe">
 		<table>
-			<tr><th>Elefant</th><th>Gewicht</th></tr>
+			<tr><th>Name</th><th>Gewicht</th></tr>
 			<tr><td colspan="2"><em>keine Daten vorhanden</em></td></tr>
 		</table>
 	</div>
