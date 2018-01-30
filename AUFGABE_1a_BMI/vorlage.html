@@ -18,9 +18,9 @@
 	  }
 	  else {
 		document.getElementById('result').innerHTML = '0';
-	  }  
+	  }
 	};
-	
+
 	/* AGE AND GENDER DEPENDENCY
 	 source: http://www.gewichtstabellen.com/bmi-tabelle-frau-mann-alter/
 	*/
@@ -42,23 +42,23 @@
 		{x: 64, y: 100, textString: "64.0 - 83.8 kg"}
 	  ],
 	}
-	
+
 	var getAgeGenderDependency = function() {
 	  var age = Number.parseInt(document.getElementById('age').value);
       var gender = document.querySelector('input[name="gender"]:checked').value;
 	  console.log(age, gender);
-	  
+
 	  // build sentence according to age and gender
 	  if (gender == 'male') {var genderString = 'eines Mannes';}
 	  else {var genderString = 'einer Frau';}
-	  
+
 	  for (var i=0;i<dataAgeDependency[gender].length;i++) {
 	    if (dataAgeDependency[gender][i]['x'] <= age &&
 		  dataAgeDependency[gender][i]['y'] >= age) {
 		  var genderRange = dataAgeDependency[gender][i]['textString'];
 		}
 	  }
-	  
+
 	  var ageGenderSentence = "Das Normalgewicht " + genderString + " mit 1.70 cm in diesem Alter liegt zwischen " + genderRange + "."
 	  document.getElementById('ageGender').innerHTML = ageGenderSentence;
 	};
@@ -80,10 +80,10 @@
 	$(document).ready(function() {
 	  calcBmi();
 	  getAgeGenderDependency();
-	  //$('#calculateBtn').on('click', calcBmi);
-	  $('#height').on('change', calcBmi);
-	  $('#weight').on('change', calcBmi);
-	  $('#age').on('change', getAgeGenderDependency);
+	  // event 'input' for chrome
+	  $('#height').on('input', calcBmi);
+	  $('#weight').on('input', calcBmi);
+	  $('#age').on('input', getAgeGenderDependency);
 	  // add event handler on radio group
 	  $("[name='gender']").on('change', getAgeGenderDependency);
 	});
