@@ -1,0 +1,69 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+    function randomIntFromInterval(min,max) {
+      return Math.floor(Math.random()*(max-min+1)+min);
+    }
+	
+	var play = function() {
+	  // read level and get array
+	  var level = document.querySelector('input[name="level"]:checked').value;
+	  
+	  var cG = null; //Computer guess
+	  switch(level) {
+	    case '1-10':
+		  cG = randomIntFromInterval(1,10);
+		  break;
+		case '1-25':
+		  cG = randomIntFromInterval(1,25);
+		  break;
+		case '1-50':
+		  cG = randomIntFromInterval(1,50);
+		  break;
+	  }
+	  
+	  
+	  // read user input
+	  var uG = $('#userGuess').val();
+	  console.log("User guess",uG,"computer guess",cG);
+	  
+	  // verify solution
+	  if (uG != cG) {
+	    // not found
+		alert("Nicht erraten");
+		color = "red";
+	  }
+	  else {
+	    alert("Erraten!");
+		color = "green";
+	  }
+	  $('#solution').text("Dein Tipp: " + uG + " Lösung: " + cG).css("background-color",color);
+	  
+	  console.log(level, uG);
+	};
+	$(document).ready(function() {
+	  $('#submit').on('click', play);
+	});
+	</script>
+
+	<style>
+	</style>
+
+</head>
+
+<body>
+	<h1>Zahlenraten</h1>
+	Schwierigkeitsgrad<br>
+	<input type="radio" name="level" value="1-10" checked="checked">1-10</input>
+	<input type="radio" name="level" value="1-25">1-25</input>
+	<input type="radio" name="level" value="1-50">1-50</input>
+	<hr>
+	<input id="userGuess" class="formInput" type="number" min="1" max="50"></input><button id="submit">Tipp abgeben</button>
+
+	<p id="solution" style="width: 200px"></p>
+</body>
+</html>

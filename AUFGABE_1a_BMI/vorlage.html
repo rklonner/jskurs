@@ -5,27 +5,7 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
-	
-	// source: http://www.gewichtstabellen.com/bmi-tabelle-frau-mann-alter/
-	var dataAgeDependency = {
-	  'male': [
-		{x: 19, x: 24,  textString: "53.5 - 72.2 kg"},
-		{x: 25, x: 34,  textString: "56.4 - 75.1 kg"},
-		{x: 35, x: 44,  textString: "59.2 - 78.0 kg"},
-		{x: 45, x: 54,  textString: "62.1 - 80.9 kg"},
-		{x: 55, x: 64,  textString: "64.0 - 83.8 kg"},
-		{x: 64, x: 100, textString: "66.9 - 86.7 kg"}
-	  ],
-	  'female': [
-		{x: 19, x: 24,  textString: "50.6 - 69.4 kg"},
-		{x: 25, x: 34,  textString: "53.5 - 72.2 kg"},
-		{x: 35, x: 44,  textString: "56.4 - 75.1 kg"},
-		{x: 45, x: 54,  textString: "59.2 - 78.0 kg"},
-		{x: 55, x: 64,  textString: "62.1 - 80.9 kg"},
-		{x: 64, x: 100, textString: "64.0 - 83.8 kg"}
-	  ],
-	}
-
+	/* BMI CALCULATION */
 	var calcBmi = function() {
 	  var height = document.getElementById('height').value;
 	  var weight = document.getElementById('weight').value;
@@ -41,37 +21,71 @@
 	  }  
 	};
 	
+	/* AGE AND GENDER DEPENDENCY
+	 source: http://www.gewichtstabellen.com/bmi-tabelle-frau-mann-alter/
+	*/
+	var dataAgeDependency = {
+	  'male': [
+		{x: 19, y: 24,  textString: "53.5 - 72.2 kg"},
+		{x: 25, y: 34,  textString: "56.4 - 75.1 kg"},
+		{x: 35, y: 44,  textString: "59.2 - 78.0 kg"},
+		{x: 45, y: 54,  textString: "62.1 - 80.9 kg"},
+		{x: 55, y: 64,  textString: "64.0 - 83.8 kg"},
+		{x: 64, y: 100, textString: "66.9 - 86.7 kg"}
+	  ],
+	  'female': [
+		{x: 19, y: 24,  textString: "50.6 - 69.4 kg"},
+		{x: 25, y: 34,  textString: "53.5 - 72.2 kg"},
+		{x: 35, y: 44,  textString: "56.4 - 75.1 kg"},
+		{x: 45, y: 54,  textString: "59.2 - 78.0 kg"},
+		{x: 55, y: 64,  textString: "62.1 - 80.9 kg"},
+		{x: 64, y: 100, textString: "64.0 - 83.8 kg"}
+	  ],
+	}
+	
 	var getAgeGenderDependency = function() {
-	  var age = document.getElementById('age').value;
+	  var age = Number.parseInt(document.getElementById('age').value);
       var gender = document.querySelector('input[name="gender"]:checked').value;
 	  console.log(age, gender);
-	  //var ageGenderSentence = "Das Normalgewicht " + genderString + "mit 1.70 cm in diesem Alter liegt zwischen " + genderRange + "."
-	  //document.getElementById('ageGender').innerHTML = 
+	  
+	  // build sentence according to age and gender
+	  if (gender == 'male') {var genderString = 'eines Mannes';}
+	  else {var genderString = 'einer Frau';}
+	  
+	  for (var i=0;i<dataAgeDependency[gender].length;i++) {
+	    if (dataAgeDependency[gender][i]['x'] <= age &&
+		  dataAgeDependency[gender][i]['y'] >= age) {
+		  var genderRange = dataAgeDependency[gender][i]['textString'];
+		}
+	  }
+	  
+	  var ageGenderSentence = "Das Normalgewicht " + genderString + " mit 1.70 cm in diesem Alter liegt zwischen " + genderRange + "."
+	  document.getElementById('ageGender').innerHTML = ageGenderSentence;
 	};
 
+	/* SET X over diagram */
 	var placeCross = function(height, weight) {
+	  // define offset
 	  var y_offset = -75;
 	  var x_offset = -1546;
+	  // define linear function input vs pixel
 	  var y = parseInt(weight)*3 + y_offset;
 	  var x = parseInt(height)*10 + x_offset;
-	  console.log(weight);
-	  console.log(y_offset);
-	  console.log(y)
-	  console.log(x)
 	  $('.cross').css({
 	    "bottom": y + "px",
 		"left": x + "px"
 	  });
-	  console.log($('.cross'))
 	};
 
 	$(document).ready(function() {
 	  calcBmi();
+	  getAgeGenderDependency();
 	  //$('#calculateBtn').on('click', calcBmi);
 	  $('#height').on('change', calcBmi);
 	  $('#weight').on('change', calcBmi);
 	  $('#age').on('change', getAgeGenderDependency);
-	  $('#gender').on('change', getAgeGenderDependency);
+	  // add event handler on radio group
+	  $("[name='gender']").on('change', getAgeGenderDependency);
 	});
 	</script>
 
@@ -79,7 +93,7 @@
 	.container {position: relative;}
 	.cross {position: absolute; bottom:75px; left:154px;}
 	.formInput {width: 70px;}
-	.bmiResult {background-color:powderblue; text-align: center; font-weight: bold;}
+	.bmiResult {text-align: center; font-weight: bold;}
 	</style>
 
 </head>
