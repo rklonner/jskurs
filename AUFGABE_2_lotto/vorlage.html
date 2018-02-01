@@ -5,9 +5,51 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
-	var createLottoTicket = function() {
+	var checkIfAllTicketsAreFinished = function () {
+	  
+	  var currentTickets = $('#allTickets').find('table');
+	  var finishedTickets = 0;
+	  for (var i=0;i<currentTickets.length;i++) {
+	    var numberOfGivenTipps = $(currentTickets[i]).find('.tipped').length;
+		if (numberOfGivenTipps == 6) {
+		  finishedTickets += 1;
+		}
+	  }
+	  console.log(finishedTickets, currentTickets.length)
+      if (finishedTickets == currentTickets.length) {
+		$('<button>').text('Ziehung starten').appendTo($('#lottoTickets'));
+	  }
+	}
+	
+	var tippClickHandler = function () {
+	  if ($(this).hasClass('tipped')) {
+	    $(this).removeClass();
+	  }
+	  else {
+	    // get table of click event and count current tipps
+		var table = $(this).parent().parent();
+		var numberOfGivenTipps = table.find('.tipped').length;
+		console.log("Given tipps", numberOfGivenTipps);
+	    // set tipp only if less than 6
+		if (numberOfGivenTipps < 6) {
+	      $(this).addClass('tipped');
+		  checkIfAllTicketsAreFinished();
+		}
+		else {
+		  console.log("Already made 6 tipps");
+		}
+		
+	    console.log("ticket-id", $(this).parent().parent().data('id'));
+		
+		
+
+	    
+	  }
+	}
+	
+	var createLottoTicket = function(id) {
 		console.log("Create Ticket");
-		var ticketTable = $('<table></table>').attr({id: "ticket1"});
+		var ticketTable = $('<table></table>').attr({id: "ticket"}).data("id", id);
 		var nrows = 8;
 		var ncols = 6;
 		var number = 0;
@@ -21,22 +63,59 @@
 				else {
 					numberText = ''
 				}
-				$('<td></td>').text(numberText).css(text-align, "center").appendTo(row);
+				$('<td></td>').text(numberText)
+				  .on('click', tippClickHandler)
+				  .appendTo(row);
 			}
 		}
-
-		console.log(ticketTable.html());
-		ticketTable.appendTo($('#lottoTickets'));
+		return ticketTable;
+	}
+	
+	var initLotto = function () {
+	  // clear old tickets
+	  $('#lottoTickets').empty();
+	  
+	  var numberOfTipps = $(this).val();
+	  var nrows;
+	  if (numberOfTipps > 5) {nrows=1} else {nrows=2};
+	  
+	  var ticketId = 0;
+	  var allTicketsTable = $('<table></table>').attr({id: "allTickets"});
+	  for (var rows=1;rows <= nrows;rows++) {
+	    console.log("ROWS", rows, nrows);
+	    var row = $('<tr></tr>').appendTo(allTicketsTable);
+	    for (var col=0;col < 5;col++) {
+		  console.log("COLS",col);
+		  ticketId += 1;
+		  if (ticketId <= numberOfTipps) {
+			ticket = createLottoTicket(ticketId);
+			var td = $('<td></td>').addClass('allTicketsColumn');
+			ticket.appendTo(td);
+			td.appendTo(row);
+			//console.log(td.html());
+		  }
+		  else {
+		    break;
+		  }
+		}
+	  }
+	  //console.log(allTicketsTable.html());
+	  allTicketsTable.appendTo($('#lottoTickets'));
 	}
 
 	$(document).ready(function() {
-		createLottoTicket();
+	    $('#numberOfTipps').on('change', initLotto);
+		//createLottoTicket();
 	});
 	</script>
 	<style>
-	td { border:1px solid #ddd; padding:4px; min-width:10px;  }
+	td { border:1px solid #ddd; padding:4px; min-width:10px; text-align:center }
+	td.allTicketsColumn {border:3px solid #ddd;}
+	
+	td.tipped {background-color:blue;}
+	
 	/*td {background: linear-gradient(to right bottom, #2f3441 50%, #212531 50%)};*/
-	td {background: linear-gradient(to bottom left, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};
+	//td {background: linear-gradient(to bottom left, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};
 	/*td {background: linear-gradient(to top right, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};*/
 	/*td:after {
 	content:"";
@@ -53,6 +132,20 @@
 </head>
 <body>
 	<h1>Lotto 6 aus 45</h1>
+	Anzahl der Tipps
+	<select id="numberOfTipps">
+	  <option value="1">1</option>
+	  <option value="2">2</option>
+	  <option value="3">3</option>
+	  <option value="4">4</option>
+	  <option value="5">5</option>
+	  <option value="6">6</option>
+	  <option value="7">7</option>
+	  <option value="8">8</option>
+	  <option value="9">9</option>
+	  <option value="10">10</option>
+	</select>
   <div id="lottoTickets"></div>
+  
 </body>
 </html>
