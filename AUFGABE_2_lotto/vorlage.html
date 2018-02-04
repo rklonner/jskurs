@@ -5,10 +5,67 @@
 	<meta charset="utf-8">
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
-	var checkIfAllTicketsAreFinished = function () {
-	  
+    var verifyTippsInAllTickets = function (randomArray) {
+      console.log("Function verifyTippsInAllTickets");	
 	  var currentTickets = $('#allTickets').find('table');
 	  var finishedTickets = 0;
+      // loop over all tickets
+	  for (var i=0;i<currentTickets.length;i++) {
+	    var tippBoxes = $(currentTickets[i]).find('td');
+		var numberOfHits = 0;
+		// loop over all tipp boxes, add colors and count hits
+		for (var j=0;j<tippBoxes.length;j++) {
+		  var box = $(tippBoxes[j]);
+		  var boxNumber = Number.parseInt(box.html());
+		  // only do something until 45
+		  if (!Number.isNaN(boxNumber)) {
+		    // hit if tipped and in array
+    		if(isInArray(boxNumber, randomArray) && box.hasClass('tipped')) {
+		      box.addClass('hit');
+			  numberOfHits += 1;
+			}
+			// mark if not tipped but in array
+			else if (isInArray(boxNumber, randomArray)) {
+			  box.addClass('drawn');
+			}
+			else {}			
+		  }
+	    }
+		// put result to div, how many hits
+		var resText = "Tipp " + (i+1) + ": " + numberOfHits + "/6";
+		var res = $('<p>').html(resText);
+		console.log(res);
+		res.appendTo($('#results'));
+	  }
+	 }
+
+	 
+	function isInArray(value, array) {
+      return array.indexOf(value) > -1;
+    }
+
+	
+	var startLottery = function () {
+	  // create 6 random numbers and start verification
+	  var randomArray = [];
+	  while (randomArray.length < 6) {
+	    randomNumber = Math.floor(Math.random() * 45) + 1;
+		console.log("random number", randomNumber);
+		// check if numbers are still unique in array
+		if (!isInArray(randomNumber, randomArray)) {
+	      randomArray.push(randomNumber);
+		  console.log("new array", randomArray);
+		}
+	  }
+	  console.log(randomArray);
+	  verifyTippsInAllTickets(randomArray);
+	}
+
+	
+	var checkIfAllTicketsAreFinished = function () {	  
+	  var currentTickets = $('#allTickets').find('table');
+	  var finishedTickets = 0;
+	  // loop over all ticket tables
 	  for (var i=0;i<currentTickets.length;i++) {
 	    var numberOfGivenTipps = $(currentTickets[i]).find('.tipped').length;
 		if (numberOfGivenTipps == 6) {
@@ -16,12 +73,17 @@
 		}
 	  }
 	  console.log(finishedTickets, currentTickets.length)
+	  // add button if all tipps are made
       if (finishedTickets == currentTickets.length) {
-		$('<button>').text('Ziehung starten').appendTo($('#lottoTickets'));
+		$('<button>').text('Ziehung starten')
+		  .on('click', startLottery)
+		  .appendTo($('#lottoTickets'));
 	  }
 	}
+
 	
 	var tippClickHandler = function () {
+	  // if tipp is selected twice, remove class tipped
 	  if ($(this).hasClass('tipped')) {
 	    $(this).removeClass();
 	  }
@@ -33,23 +95,20 @@
 	    // set tipp only if less than 6
 		if (numberOfGivenTipps < 6) {
 	      $(this).addClass('tipped');
+		  // after setting a tipp check if all tickets have
+		  // 6 tipps, if yes create button "ziehung"
 		  checkIfAllTicketsAreFinished();
 		}
 		else {
 		  console.log("Already made 6 tipps");
-		}
-		
-	    console.log("ticket-id", $(this).parent().parent().data('id'));
-		
-		
-
-	    
+		}	
 	  }
 	}
+
 	
 	var createLottoTicket = function(id) {
 		console.log("Create Ticket");
-		var ticketTable = $('<table></table>').attr({id: "ticket"}).data("id", id);
+		var ticketTable = $('<table></table>');
 		var nrows = 8;
 		var ncols = 6;
 		var number = 0;
@@ -57,12 +116,14 @@
 			var row = $('<tr></tr>').appendTo(ticketTable);
 			for (var j=0; j < ncols; j++) {
 				number++;
+				// only add numbers until 45
 				if (number <= 45) {
 					numberText = number
 				}
 				else {
 					numberText = ''
 				}
+				// append td and add handler
 				$('<td></td>').text(numberText)
 				  .on('click', tippClickHandler)
 				  .appendTo(row);
@@ -70,70 +131,62 @@
 		}
 		return ticketTable;
 	}
+
 	
 	var initLotto = function () {
 	  // clear old tickets
 	  $('#lottoTickets').empty();
 	  
+	  // get number of tickets to be created
 	  var numberOfTipps = $(this).val();
+	  console.log("Number of tipps", numberOfTipps);
 	  var nrows;
-	  if (numberOfTipps > 5) {nrows=1} else {nrows=2};
+	  if (numberOfTipps > 5) {nrows=2} else {nrows=1};
 	  
+	  // add tickets to container, 5 in a row, max 2 rows
 	  var ticketId = 0;
 	  var allTicketsTable = $('<table></table>').attr({id: "allTickets"});
 	  for (var rows=1;rows <= nrows;rows++) {
-	    console.log("ROWS", rows, nrows);
+	    //console.log("ROWS", rows, nrows);
 	    var row = $('<tr></tr>').appendTo(allTicketsTable);
 	    for (var col=0;col < 5;col++) {
-		  console.log("COLS",col);
+		  //console.log("COLS",col);
 		  ticketId += 1;
+		  // only add ticket if number of tipps not reached yet
 		  if (ticketId <= numberOfTipps) {
 			ticket = createLottoTicket(ticketId);
 			var td = $('<td></td>').addClass('allTicketsColumn');
 			ticket.appendTo(td);
 			td.appendTo(row);
-			//console.log(td.html());
 		  }
+		  // otherwise stopp ticket creation
 		  else {
 		    break;
 		  }
 		}
 	  }
-	  //console.log(allTicketsTable.html());
+	  // add tickets to dom
 	  allTicketsTable.appendTo($('#lottoTickets'));
 	}
 
+	
 	$(document).ready(function() {
 	    $('#numberOfTipps').on('change', initLotto);
-		//createLottoTicket();
 	});
 	</script>
 	<style>
 	td { border:1px solid #ddd; padding:4px; min-width:10px; text-align:center }
 	td.allTicketsColumn {border:3px solid #ddd;}
-	
-	td.tipped {background-color:blue;}
-	
-	/*td {background: linear-gradient(to right bottom, #2f3441 50%, #212531 50%)};*/
-	//td {background: linear-gradient(to bottom left, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};
-	/*td {background: linear-gradient(to top right, transparent calc(50% - 1px), black 50%, transparent calc(50% + 1px)) no-repeat 0px 0px / 100px 100px};*/
-	/*td:after {
-	content:"";
-  position:absolute;
-	border-bottom:1px solid red;
-  width:10px;
-  transform: rotate(45deg);
-  transform-origin: 0% 0%;
-  }*/
-	/* td: before, after
-	transform, translate
-	*/
+	td.tipped {background-color:grey;}
+	td.drawn {background-color:blue;}
+	td.hit {background-color:green;}
 	</style>
 </head>
 <body>
-	<h1>Lotto 6 aus 45</h1>
+	<h1 style="width: 200px; background-color: mediumseagreen; color: white;font-family:fantasy;"><i>Lotto 6 aus 45</i></h1>
 	Anzahl der Tipps
 	<select id="numberOfTipps">
+	  <option value=""></option>
 	  <option value="1">1</option>
 	  <option value="2">2</option>
 	  <option value="3">3</option>
@@ -146,6 +199,7 @@
 	  <option value="10">10</option>
 	</select>
   <div id="lottoTickets"></div>
+  <div id="results"></div>
   
 </body>
 </html>
