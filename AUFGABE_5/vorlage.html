@@ -24,11 +24,15 @@
 	}
 
 	var circuit = function() {
+		this.race_started = false;
 		this.finishLine = 300;
 		this.allBicycles = [];
 		this.addBicycle = function (bicycle) {
 	    bicycle.id = this.allBicycles.length + 1;
 			this.allBicycles.push(bicycle);
+		}
+		this.startRace = function () {
+			this.race_started = true;
 		}
 		this.draw = function () {
 			var bahn = $('#bahn');
@@ -37,12 +41,14 @@
 			for (var i in this.allBicycles) {
 				//console.log("Draw",i);
 				bike = this.allBicycles[i];
-				console.log(bike.velocity);
-				bike.distance += bike.velocity;
-				distance = bike.distance;
-				console.log(distance)
+				if (this.race_started) {
+					console.log(bike.velocity);
+					bike.distance += bike.velocity;
+					distance = bike.distance;
+					console.log(distance)
+				}
 				bicycleHTML = bike.html();
-				$(bicycleHTML).css({"position": "relative","left": distance.toString() + "px"});
+				$(bicycleHTML).css({"position": "relative","left": bike.distance.toString() + "px"});
 				$(bicycleHTML).appendTo(bahn);
 				$('<hr>').appendTo(bahn);
 			}
@@ -70,6 +76,7 @@
 		});
 
 		$('#startRace').on('click', function () {
+			myCircuit.startRace();
 			myCircuit.draw();
 			myCircuit.checkIfRaceFinished();
 		})

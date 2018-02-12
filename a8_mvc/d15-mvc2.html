@@ -1,0 +1,306 @@
+<!doctype html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+    <title>Javascript MVC</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+
+    <style>
+
+    </style>
+
+</head>
+
+
+<body>
+
+    <div id="container">
+        <input type="text" id="username">
+		<button id="btn">Hinzufügen</button>
+        <div id="users"></div>
+		<button id="delete">Lösche markierte User</button>
+		<br>
+		<button id="sort">Sortieren</button>
+    </div>
+
+    <script>
+	var Event = function (sender) {
+    this._sender = sender;
+    this._listeners = [];
+}
+
+Event.prototype = {
+
+    attach: function (listener) {
+        this._listeners.push(listener);
+    },
+
+    notify: function (args) {
+        for (var i = 0; i < this._listeners.length; i += 1) {
+            this._listeners[i](this._sender, args);
+        }
+    }
+
+};
+
+	</script>
+
+
+
+    <script>
+var Model = function () {
+     this.users = [];
+     this.selectedUsers = [];
+     this.addUserEvent = new Event(this);
+     this.deleteUsersEvent = new Event(this);
+		 this.sortUsersEvent = new Event(this);
+
+ };
+
+ Model.prototype = {
+
+     addUser: function (user) {
+         this.users.push({
+            userName: user
+         });
+         this.addUserEvent.notify();
+     },
+
+     getUsers: function () {
+         return this.users;
+     },
+
+     setSelectedUser: function (userIndex) {
+         this.selectedUsers.push(userIndex);
+     },
+
+     unselectUser: function (userIndex) {
+         this.selectedUsers.splice(userIndex, 1);
+     },
+
+
+     deleteUsers: function () {
+         var selectedUsers = this.selectedUsers.sort();
+
+         for (var i = selectedUsers.length - 1; i >= 0; i--) {
+             this.users.splice(this.selectedUsers[i], 1);
+         }
+
+         this.selectedUsers = [];
+
+         this.deleteUsersEvent.notify();
+
+     },
+
+		 sortUsers: function () {
+			 this.users = this.users.sort(function(a,b) {return a.userName > b.userName});
+			 this.sortUsersEvent.notify();
+		 }
+
+
+ };
+
+
+	</script>
+    <script>
+var View = function (model) {
+    this.model = model;
+    this.addUserEvent = new Event(this);
+    this.selectUserEvent = new Event(this);
+    this.unselectUserEvent = new Event(this);
+    this.deleteUserEvent = new Event(this);
+		this.sortUsersEvent = new Event(this);
+
+    this.init();
+};
+
+View.prototype = {
+
+    init: function () {
+        this.createChildren()
+            .setupHandlers()
+            .enable();
+    },
+
+    createChildren: function () {
+
+        this.$container = $('#container');
+        this.$addUserButton = $('#btn');
+        this.$usersTextBox = $('#username');
+        this.$usersContainer = $('#users');
+				this.$sortUsersButton = $('#sort');
+
+        return this;
+    },
+
+    setupHandlers: function () {
+
+        this.addUserButtonHandler = this.addUserButton.bind(this);
+        this.selectOrUnselectUserHandler = this.selectOrUnselectUser.bind(this);
+        this.deleteUserButtonHandler = this.deleteUserButton.bind(this);
+				this.sortUsersButtonHandler = this.sortUsersButton.bind(this);
+
+
+        this.addUserHandler = this.addUser.bind(this);
+        this.clearUserTextBoxHandler = this.clearUserTextBox.bind(this);
+        this.deleteUserHandler = this.deleteUsers.bind(this);
+				this.sortUsersHandler = this.sortUsers.bind(this);
+
+        return this;
+    },
+
+    enable: function () {
+
+        this.$addUserButton.on('click', this.addUserButtonHandler);
+        this.$container.on('click', '.user', this.selectOrUnselectUserHandler);
+        this.$container.on('click', '#delete', this.deleteUserButtonHandler);
+				this.$container.on('click', '#sort', this.sortUsersButtonHandler);
+
+
+        this.model.addUserEvent.attach(this.addUserHandler);
+        this.model.addUserEvent.attach(this.clearUserTextBoxHandler);
+        this.model.deleteUsersEvent.attach(this.deleteUserHandler);
+				this.model.sortUsersEvent.attach(this.sortUsersHandler);
+
+        return this;
+    },
+
+    addUserButton: function () {
+        this.addUserEvent.notify({
+            nameVomUser: this.$usersTextBox.val()
+        });
+    },
+
+    deleteUserButton: function () {
+        this.deleteUserEvent.notify();
+    },
+
+		sortUsersButton: function () {
+			  this.sortUsersEvent.notify();
+		},
+
+    selectOrUnselectUser: function (event) {
+
+        var userIndex = $(event.target).attr("data-index");
+
+        if ($(event.target).attr('data-user-selected') == 'false') {
+            $(event.target).attr('data-user-selected', true);
+            this.selectUserEvent.notify({
+                userIndex: userIndex
+            });
+        } else {
+            $(event.target).attr('data-user-selected', false);
+            this.unselectUserEvent.notify({
+                userIndex: userIndex
+            });
+        }
+
+    },
+
+    show: function () {
+        this.buildList();
+    },
+
+    buildList: function () {
+        var users = this.model.getUsers();
+        var html = "";
+        var $usersContainer = this.$usersContainer;
+
+        $usersContainer.html('');
+
+        var index = 0;
+
+        for (var user in users) {
+
+            $usersContainer.append('<div><label><input type="checkbox" class="user" data-index="' + index + '" data-user-selected="false">' + users[user].userName + "</label></div>");
+
+            index++;
+        }
+
+    },
+
+
+
+    /* -------------------- Handlers From Event Dispatcher ----------------- */
+
+    clearUserTextBox: function () {
+        this.$usersTextBox.val('');
+    },
+
+    addUser: function () {
+        this.show();
+    },
+
+    deleteUsers: function () {
+        this.show();
+
+    },
+
+		sortUsers: function () {
+			this.show();
+		}
+
+    /* -------------------- End Handlers From Event Dispatcher ----------------- */
+
+
+};
+
+
+	</script>
+    <script>
+	var Controller = function (model, view) {
+		this.model = model;
+		this.view = view;
+
+		this.init();
+	};
+
+	Controller.prototype = {
+
+		init: function () {
+			this.view.addUserEvent.attach(this.addUser.bind(this));
+			this.view.deleteUserEvent.attach(this.deleteUser.bind(this));
+			this.view.selectUserEvent.attach(this.selectUser.bind(this));
+			this.view.unselectUserEvent.attach(this.unselectUser.bind(this));
+			this.view.sortUsersEvent.attach(this.sortUsers.bind(this));
+		},
+
+
+		addUser: function (sender, args) {
+			this.model.addUser(args.nameVomUser);
+		},
+
+		selectUser: function (sender, args) {
+			this.model.setSelectedUser(args.userIndex);
+		},
+
+		unselectUser: function (sender, args) {
+			this.model.unselectUser(args.userIndex);
+		},
+
+		deleteUser: function () {
+			this.model.deleteUsers();
+		},
+
+		sortUsers: function () {
+			this.model.sortUsers();
+		}
+
+	};
+
+
+	</script>
+    <script>
+
+$(function () {
+     var model = new Model(),
+         view = new View(model),
+         controller = new Controller(model, view);
+ });
+
+	</script>
+
+</body>
+
+</html>

@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+
+	//###########################################
+	// ECMA5
+	//###########################################
+	var tier = {
+	beine: 4,
+	removeBein: function () {
+		this.beine--;
+	}
+}
+
+	// möglichkeit objekt zu erzeugen
+	var o = {};
+	var o2 = new Object();
+	//var o3 = Object.create();  // kann parameter angeben, z.B. 1. Parameter = Prototyp objekt
+	var o4 = Object.create({})
+
+	var elefant = Object.create(tier); // kann bestehende Objekte als Prototyp verwenden
+	var spinne = Object.create(tier);
+	spinne.beine = 8;  // kann auf attribute und functionen zugreifen
+	spinne.removeBein();
+
+  tier.removeBein();
+
+	// own-property - attribut wird nicht weitervererbt.
+	// beim Konstruktur erzeuge ich immer own-property
+
+	//a = [1,3];
+	//a.x = function() {}; // wird in for-schleife mit ausgeben weil enumerierbar
+	//a.prototpye.x = function() {} // wird nicht mit ausgegeben
+
+	// 2. Parameter von create =  attribute/properties erzeugen und diesen bestimmte
+	// eigenschaften mitgeben
+  var person = Object.create({}, {
+		vorname: {
+			value: 'Max',
+			writable: true,
+			enumerable: true
+		},
+		alter: {
+			value:0,
+			enumerable: true
+		},
+		makeOlder:{
+			value: function () {this.alter++;},
+			enumerable: false
+		}
+	})
+
+	console.log(person);
+
+	for (var i in person) {
+		console.log(i)
+	}
+
+
+	// getter/setter
+	var Circle = function(radius) {
+		this.radius = radius;
+	}
+	//Circle.prototpye.umfang = function () {}
+	//jetzt nicht prototyp sondern attribut
+ //3. parameter, eigenschaftsobject
+ // bei abfrage von attribut wird function aufgerufen
+	Object.defineProperty(Circle.prototpye, 'umfang', {
+		get: function() {
+			return 2*Math.PI*this.radius;
+		},
+		set:function(wert) {
+			this.radius = wert/2/Math.PI;
+		}
+	})
+
+  var k = new Circle(5);
+	console.log(k.umfang);
+	k.umfang = 10;
+	console.log(k.radius);
+
+
+	//###########################################
+	// ECMA6
+	//###########################################
+	
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+</body>
+</html>
