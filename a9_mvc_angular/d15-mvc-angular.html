@@ -1,0 +1,72 @@
+<!doctype html>
+<html>
+  <head>
+	  <meta charset="utf-8">
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+
+	 <script>
+   var app = angular.module('userApp', []);
+
+   app.controller('userCtrl', function ( $scope ) {
+     $scope.users = [];
+     $scope.sortDirection = 'asc';
+     $scope.addUser = function () {
+       $scope.users.push({userName: $scope.textFromUserInput, markiert: false });
+       $scope.textFromUserInput = '';
+       $scope.sortUsers();
+       console.log($scope.users);
+     };
+
+     $scope.deleteUsers = function () {
+       //for (let i in $scope.users) {
+       for ( let i= $scope.users.length-1;i>=0;i--) {
+         if ($scope.users[i].markiert) {
+           $scope.users.splice(i,1);
+         }
+       }
+     };
+
+     $scope.sortUsers = function () {
+       if ($scope.sortDirection == 'asc') {
+         $scope.users = $scope.users.sort(function(a,b) {return a.userName > b.userName});
+         $scope.sortDirection = 'desc';
+       }
+       else {
+         $scope.users = $scope.users.sort(function(a,b) {return a.userName < b.userName});
+         $scope.sortDirection = 'asc';
+       }
+     };
+
+     $scope.getAnzahlUser = function () {
+       return $scope.users.length;
+     };
+   });
+	  </script>
+	 <style>
+
+	  </style>
+
+  </head>
+  <body ng-app="userApp">
+    <div ng-controller="userCtrl">
+      <h2>Anzahl User: <em>{{getAnzahlUser()}}</em></h2>
+
+        <div ng-repeat="u in users">
+          <input type="checkbox" ng-model="u.markiert">
+          <span>{{u.userName}}</span>
+        </div>
+
+      <form>
+        <input placeholder="Username" type="text" ng-model="textFromUserInput">
+        <button ng-click="addUser()">Hinzufügen</button>
+      </form>
+
+      <button ng-click="deleteUsers()">Markierte löschen</button>
+      <br>
+      <button ng-click="sortUsers()" ng-model="sortDirection">Sortieren {{sortDirection}}</button>
+    </div>
+
+
+  </body>
+
+</html>
