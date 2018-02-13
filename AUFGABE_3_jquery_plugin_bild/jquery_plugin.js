@@ -1,7 +1,7 @@
 ;(function($) {
   "use strict"
 
-  $.fn.flip = function (options) {
+  $.fn.bildtext = function (options) {
     var settings = $.extend({
       // z.b. position=center
       dir: 'horizontal'
@@ -15,11 +15,13 @@
   return this.each(function () {
     // this => HTMLNode Element, Schleife each
     $(this).on('mouseenter', function () {
-      if (settings.dir == 'horizontal') {
+	  var bildtext = $(this).attr('alt');
+	  //if (settings.attr(
+      if (settings.verticalAlign == 'center') {
         // hits => HTMLNodeElement von EventListener
         $(this).css({'transform': 'scale(-1,1)'});
       };
-      if (settings.dir == 'vertical') {
+      if (settings.verticalAlign == 'top') {
         // hits => HTMLNodeElement von EventListener
         $(this).css({'transform': 'scale(1,-1)'});
       };

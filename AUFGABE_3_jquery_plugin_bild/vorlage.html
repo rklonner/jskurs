@@ -10,17 +10,49 @@
 		//$('img:first-child').flip(); // erstes bild
 		//$('img:nth-child(2n)').flip(); // nur gerade
 		//$('img').flip({dir:'vertical'});  //alle bilder
-		$('img').flip({dir:'horizontal'});  //alle bilder
+		$('img').bildtext({verticalAlign:'center'});  //alle bilder
 	})
 	</script>
 	<style>
+#container {
+  height: 400px;
+  width: 400px;
+  position: relative;
+}
+#container img {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.bildtext {
+  z-index: 100;
+  position: absolute;
+  color: black;
+  font-size: 12px;
+  font-weight: bold;
+  left: 0;
+  top: 0;
+  margin-left:auto;
+  margin-right:auto;
+}
 	</style>
 </head>
 <body>
-	<img src="ski.jpg">
-	<img src="skienden.jpg">
+  <div id="container">
+	<img src="ski.jpg" alt="Modell Atomic Backland 85">
+	<span class="bildtext">HELLO WORLD</span>
+  </div>
+  <!--
+  <div id="container">
+	<img src="skienden.jpg" alt="Skibreite unter Bindung 85cm">
+	<span class="bildtext">HELLO WORLD2</span>
+  </div>
+	
 	<br>
-	<img src="description.jpg">
-	<img src="tour.jpg">
+	<img src="description.jpg" alt="Testbericht von Tom">
+	<img src="tour.jpg" alt="Tour im Hochgebirge">
+	-->
 </body>
 </html>
