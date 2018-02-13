@@ -23,7 +23,7 @@
 				'url': 'http://10.135.13.8:20001/login',
 				method: 'GET',
 				data: loginData})
-				.done(function(loginResponse) {
+				.done(function(loginSuccessful) {
 					//$('input').val('');
 					//alert('Login erfolgreich');
 
@@ -31,8 +31,8 @@
 					//	loginSuccessful: true
 					//}
 
-					console.log(loginResponse.loginSuccessful)
-					if (loginResponse.loginSuccessful) {
+					console.log(loginSuccessful)
+					if (loginSuccessful) {
 						$('#login').hide();
 						$('#canvasArea').show();
 					} else {
