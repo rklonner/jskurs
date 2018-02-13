@@ -15,21 +15,22 @@
 		this.velocity = Math.floor(Math.random() * 10) + 1;
 		this.html = function () {
 			var svgBicycle = $('#svgContainer').find('svg').clone();
-			svgBicycle.attr('width', '80px')
-			svgBicycle.find('path').css('fill',this.color);
-			svgBicycle.on('click', this.changeVelocity);
+			  svgBicycle.attr('width', '80px')
+				.on('click', this.changeVelocity.bind(this) )
+			  .find('path').css('fill',this.color);
+
 			return svgBicycle
 		}
 		this.ausgabe = function() {
 			return 'Fahrrad kostet € '+this.preis;
 		},
-		
+
 		this.changeColor = function () {
 		  var colorIdx = this.availableColors.indexOf(this.color);
 		  var newColorIdx = colorIdx + 1 > this.availableColors.length ? 0 : colorIdx + 1;
 		  this.color = this.availableColors[newColorIdx];
 		},
-		
+
 		this.changeVelocity = function () {
 		  console.log("Previous velocity", this.velocity);
 		  this.velocity = Math.floor(Math.random() * 10) + 1;
@@ -61,14 +62,14 @@
 					bike.distance += bike.velocity;
 					distance = bike.distance;
 					console.log(distance)
-					
+
 					// change speed during race
 					bike.changeVelocity();
 				}
 				bicycleHTML = bike.html();
 				$(bicycleHTML).css({"position": "relative","left": bike.distance.toString() + "px"});
 				$(bicycleHTML).appendTo(bahn);
-				$('<hr>').appendTo(bahn);
+				$('<hr>').addClass('path').appendTo(bahn);
 			}
 		};
 		this.checkIfRaceFinished = function (myTimer) {
@@ -84,7 +85,7 @@
 		},
 		this.showRanking = function () {
 		  this.ranking = this.allBicycles.sort(function(a,b) {return a.distance < b.distance});
-		  
+
 		  $('<h1>').html('RANKING').appendTo($('#results'));
 		  for (let i in this.ranking) {
 		  var platz = 1 + parseInt(i);
@@ -100,7 +101,7 @@
 	var bikeUI = new bicycle();
 	console.log(bikeUI.color);
 	$('#bikeUI').html(bikeUI.html());
-	
+
 	// choose color
 	$('#bikeUI').on('click', function () {
 	   console.log("CHANGE COLOR");
@@ -108,7 +109,7 @@
 	   $('#bikeUI').empty();
 	   $('#bikeUI').html(bikeUI.html());
 	});
-	
+
 	// init a new circuit
     var myCircuit = new circuit();
 
@@ -117,7 +118,7 @@
 		var bike = new bicycle(bikeUI.color);
 		myCircuit.addBicycle(bike);
 		myCircuit.draw();
-		
+
 		// check when to view start button
 		if (myCircuit.allBicycles.length >= 2) {
 		  $('#startRaceButton').show();
@@ -131,7 +132,7 @@
 		var myTimer = setInterval(function () {
 		  myCircuit.draw();
 		  myCircuit.checkIfRaceFinished(myTimer);
-		}, 250);
+		}, 1500);
 	});
 
   });
@@ -139,7 +140,7 @@
 	<style>
 	.bicycle {height:80px;}
 	button.addBicycleBtn {width:40px;height:80px;}
-	button.addVelocityBtn {width:200px;height:80px;}
+	.path {width:380px;margin-left:0px;}
 	</style>
 </head>
 <body>

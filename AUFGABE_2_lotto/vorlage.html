@@ -6,7 +6,7 @@
 	<script src="jquery-3.2.1.min.js"></script>
 	<script>
     var verifyTippsInAllTickets = function (randomArray) {
-      console.log("Function verifyTippsInAllTickets");	
+      console.log("Function verifyTippsInAllTickets");
 	  var currentTickets = $('#allTickets').find('table');
 	  var finishedTickets = 0;
       // loop over all tickets
@@ -28,7 +28,7 @@
 			else if (isInArray(boxNumber, randomArray)) {
 			  box.addClass('drawn');
 			}
-			else {}			
+			else {}
 		  }
 	    }
 		// put result to div, how many hits
@@ -39,12 +39,12 @@
 	  }
 	 }
 
-	 
+
 	function isInArray(value, array) {
       return array.indexOf(value) > -1;
     }
 
-	
+
 	var startLottery = function () {
 	  // create 6 random numbers and start verification
 	  var randomArray = [];
@@ -61,8 +61,8 @@
 	  verifyTippsInAllTickets(randomArray);
 	}
 
-	
-	var checkIfAllTicketsAreFinished = function () {	  
+
+	var checkIfAllTicketsAreFinished = function () {
 	  var currentTickets = $('#allTickets').find('table');
 	  var finishedTickets = 0;
 	  // loop over all ticket tables
@@ -81,7 +81,7 @@
 	  }
 	}
 
-	
+
 	var tippClickHandler = function () {
 	  // if tipp is selected twice, remove class tipped
 	  if ($(this).hasClass('tipped')) {
@@ -101,11 +101,11 @@
 		}
 		else {
 		  console.log("Already made 6 tipps");
-		}	
+		}
 	  }
 	}
 
-	
+
 	var createLottoTicket = function(id) {
 		console.log("Create Ticket");
 		var ticketTable = $('<table></table>');
@@ -132,17 +132,17 @@
 		return ticketTable;
 	}
 
-	
+
 	var initLotto = function () {
 	  // clear old tickets
 	  $('#lottoTickets').empty();
-	  
+
 	  // get number of tickets to be created
 	  var numberOfTipps = $(this).val();
 	  console.log("Number of tipps", numberOfTipps);
 	  var nrows;
 	  if (numberOfTipps > 5) {nrows=2} else {nrows=1};
-	  
+
 	  // add tickets to container, 5 in a row, max 2 rows
 	  var ticketId = 0;
 	  var allTicketsTable = $('<table></table>').attr({id: "allTickets"});
@@ -169,7 +169,7 @@
 	  allTicketsTable.appendTo($('#lottoTickets'));
 	}
 
-	
+
 	$(document).ready(function() {
 	    $('#numberOfTipps').on('change', initLotto);
 	});
@@ -183,7 +183,7 @@
 	</style>
 </head>
 <body>
-	<h1 style="width: 200px; background-color: mediumseagreen; color: white;font-family:fantasy;"><i>Lotto 6 aus 45</i></h1>
+	<h1 style="width: 220px; background-color: mediumseagreen; color: white;font-family:fantasy;"><i>Lotto 6 aus 45</i></h1>
 	Anzahl der Tipps
 	<select id="numberOfTipps">
 	  <option value=""></option>
@@ -200,6 +200,6 @@
 	</select>
   <div id="lottoTickets"></div>
   <div id="results"></div>
-  
+
 </body>
 </html>
