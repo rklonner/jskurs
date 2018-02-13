@@ -1,0 +1,27 @@
+{Household : {
+  1: [1,2],
+  2: [3],
+  }
+}
+
+{Users: [
+  { id: 1,
+    name: Max,
+    password: '12345',
+    householdId: 1,
+    calories: 2100,
+  },
+  { id: 2,
+    name: Hans,
+    password: '123',
+    householdId: 1,
+    calories: 2100,
+  },
+  { id: 3,
+    name: Peter,
+    password: '123a',
+    householdId: 2,
+    calories: 2100,
+  },
+  ]
+}

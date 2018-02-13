@@ -1,0 +1,62 @@
+<!doctype html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<script src="jquery-3.2.1.min.js"></script>
+	<script>
+	$(document).ready(function () {
+		$('#login').on('submit',  function (e) {
+			e.preventDefault();
+			console.log("LOGIN")
+
+			// clear messages
+			$('#messages').empty();
+
+			var loginData = {
+				userName: $('#userName').val(),
+				password: $('#password').val(),
+			};
+			console.log(loginData);
+
+			$.ajax({
+				'url': 'http://10.135.13.8:20001/login',
+				method: 'GET',
+				data: loginData})
+				.done(function(loginResponse) {
+					//$('input').val('');
+					//alert('Login erfolgreich');
+
+          //var loginResponse = {
+					//	loginSuccessful: true
+					//}
+
+					console.log(loginResponse.loginSuccessful)
+					if (loginResponse.loginSuccessful) {
+						$('#login').hide();
+						$('#canvasArea').show();
+					} else {
+						$('<p>').html('Anmeldung fehlgeschlagen').appendTo($('#messages'));
+					}
+					//getData();
+				})
+				.fail(function() {
+					alert('Server nicht erreichbar')
+				});
+		});  // submit event
+	});  // document ready
+	</script>
+	<style>
+	</style>
+</head>
+<body>
+	<form id="login">
+		<h2>SUPERPAINT - Login</h2>
+		<input type="email" id="userName" placeholder="Username"><br>
+		<input type="password" id="password" placeholder="Passwort"><br>
+		<button>Login</button>
+	</form>
+	<div id="canvasArea" style="display:none">Canvas-Area</div>
+	<div id="messages"></div>
+</body>
+</html>

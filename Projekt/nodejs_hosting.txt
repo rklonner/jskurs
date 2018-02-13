@@ -1,1 +1,13 @@
 http://www.hostingadvice.com/blog/where-to-find-free-node-js-hosting/
+
+# bootstrap4 und angular 2
+https://codingthesmartway.com/building-an-angular-5-project-with-bootstrap-4-and-firebase/
+
+# login angular 2/bootstrap4
+https://embed.plnkr.co/plunk/UvIxFe
+
+# angular daily deal append
+https://auth0.com/blog/angular-2-authentication/
+
+# angular todo append
+https://www.sitepoint.com/angular-2-tutorial/
