@@ -9,17 +9,31 @@
 	// Konstruktor-Funktion
 	var bicycle = function( color ) {
 		this.id;
-		this.color = color;
+		this.availableColors = ['yellow', 'red', 'green', 'blue'];
+		this.color = color == 'undefined' ? this.availableColors[0]: color;
 		this.distance = 0;
 		this.velocity = Math.floor(Math.random() * 10) + 1;
 		this.html = function () {
 			var svgBicycle = $('#svgContainer').find('svg').clone();
 			svgBicycle.attr('width', '80px')
 			svgBicycle.find('path').css('fill',this.color);
+			svgBicycle.on('click', this.changeVelocity);
 			return svgBicycle
 		}
 		this.ausgabe = function() {
 			return 'Fahrrad kostet € '+this.preis;
+		},
+		
+		this.changeColor = function () {
+		  var colorIdx = this.availableColors.indexOf(this.color);
+		  var newColorIdx = colorIdx + 1 > this.availableColors.length ? 0 : colorIdx + 1;
+		  this.color = this.availableColors[newColorIdx];
+		},
+		
+		this.changeVelocity = function () {
+		  console.log("Previous velocity", this.velocity);
+		  this.velocity = Math.floor(Math.random() * 10) + 1;
+		  console.log("New velocity", this.velocity);
 		}
 	}
 
@@ -27,6 +41,7 @@
 		this.race_started = false;
 		this.finishLine = 300;
 		this.allBicycles = [];
+		this.ranking = [];
 		this.addBicycle = function (bicycle) {
 	    bicycle.id = this.allBicycles.length + 1;
 			this.allBicycles.push(bicycle);
@@ -46,6 +61,9 @@
 					bike.distance += bike.velocity;
 					distance = bike.distance;
 					console.log(distance)
+					
+					// change speed during race
+					bike.changeVelocity();
 				}
 				bicycleHTML = bike.html();
 				$(bicycleHTML).css({"position": "relative","left": bike.distance.toString() + "px"});
@@ -53,53 +71,87 @@
 				$('<hr>').appendTo(bahn);
 			}
 		};
-		this.checkIfRaceFinished = function () {
+		this.checkIfRaceFinished = function (myTimer) {
 			for (var i in this.allBicycles) {
 				bike = this.allBicycles[i];
 				console.log("CHECK",bike.distance,this.finishLine)
 				if (bike.distance >= this.finishLine) {
-					alert('bike ' + bike.id + ' finished');
+				    clearInterval(myTimer);
+					this.showRanking();
+					//alert('bike ' + bike.id + ' finished');
 				}
 			}
+		},
+		this.showRanking = function () {
+		  this.ranking = this.allBicycles.sort(function(a,b) {return a.distance < b.distance});
+		  
+		  $('<h1>').html('RANKING').appendTo($('#results'));
+		  for (let i in this.ranking) {
+		  var platz = 1 + parseInt(i);
+		    var resultLine = $('<p>').html(platz + ' Platz: Bike ' + this.ranking[i].id);
+		    resultLine.appendTo($('#results'));
+		  }
 		}
 	};
 
   $(document).ready(function() {
 
-		// init a new circuit
+    // init UI
+	var bikeUI = new bicycle();
+	console.log(bikeUI.color);
+	$('#bikeUI').html(bikeUI.html());
+	
+	// choose color
+	$('#bikeUI').on('click', function () {
+	   console.log("CHANGE COLOR");
+	   bikeUI.changeColor();
+	   $('#bikeUI').empty();
+	   $('#bikeUI').html(bikeUI.html());
+	});
+	
+	// init a new circuit
     var myCircuit = new circuit();
 
     $('#addBicycleButton').on('click', function() {
-			var bike = new bicycle('blue');
-			myCircuit.addBicycle(bike);
-			myCircuit.draw();
-		});
-
-		$('#startRace').on('click', function () {
-			myCircuit.startRace();
-			myCircuit.draw();
-			myCircuit.checkIfRaceFinished();
-		})
-
+	    console.log(bikeUI.color);
+		var bike = new bicycle(bikeUI.color);
+		myCircuit.addBicycle(bike);
+		myCircuit.draw();
+		
+		// check when to view start button
+		if (myCircuit.allBicycles.length >= 2) {
+		  $('#startRaceButton').show();
+		}
 	});
+
+	$('#startRaceButton').on('click', function () {
+	    $('#addBicycleButton').unbind();
+		$(this).unbind();
+		myCircuit.startRace();
+		var myTimer = setInterval(function () {
+		  myCircuit.draw();
+		  myCircuit.checkIfRaceFinished(myTimer);
+		}, 250);
+	});
+
+  });
 	</script>
 	<style>
 	.bicycle {height:80px;}
 	button.addBicycleBtn {width:40px;height:80px;}
+	button.addVelocityBtn {width:200px;height:80px;}
 	</style>
 </head>
 <body>
 	<div>
 		<table><tr>
-			<td><img class="bicycle" src="bicycle.svg"></td>
+			<td id="bikeUI"></td>
 			<td><button id="addBicycleButton" class="addBicycleBtn">+</button></td>
-			<td><button id="startRace" class="addBicycleBtn">Start</button></td>
+			<td><button id="startRaceButton" class="addBicycleBtn" style="display:none">Start</button></td>
 		</tr></table>
 	</div>
-	<div id="bahn">
-
-	</div>
-
+	<div id="bahn"></div>
+	<div id="results"></div>
 
 
 
